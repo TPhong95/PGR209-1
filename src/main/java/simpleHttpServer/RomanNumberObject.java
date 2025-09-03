@@ -1,10 +1,10 @@
 package simpleHttpServer;
 
-public class romanNumberObject {
+public class RomanNumberObject {
     private String romanNumberStringAnswer;
     private int numberLeftToCalculate;
 
-    public romanNumberObject(int numberLeftToCalculate) {
+    public RomanNumberObject(int numberLeftToCalculate) {
         this.romanNumberStringAnswer = "";
         this.numberLeftToCalculate = numberLeftToCalculate;
     }

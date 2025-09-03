@@ -1,9 +1,9 @@
 package simpleHttpServer;
 
-public class romanNumerals {
+public class RomanNumerals {
 
     public String convertRomanNumerals(int numberToConvert) {
-        romanNumberObject answer = new romanNumberObject(numberToConvert);
+        RomanNumberObject answer = new RomanNumberObject(numberToConvert);
 
         answer = digitConverter(100, "C", answer);
         answer = digitConverter(99, "IC", answer);
@@ -19,7 +19,7 @@ public class romanNumerals {
         return answer.getRomanNumberStringAnswer();
     }
 
-    public romanNumberObject digitConverter(int digit, String romanNumber, romanNumberObject answer) {
+    public RomanNumberObject digitConverter(int digit, String romanNumber, RomanNumberObject answer) {
         var numberToCalc = answer.getNumberLeftToCalculate();
         var newAnswer = answer.getRomanNumberStringAnswer();
         while (numberToCalc >= digit) {

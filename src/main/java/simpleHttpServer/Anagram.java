@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class anagram {
+public class Anagram {
 
     private final String filename = "words.txt";
 
@@ -32,7 +32,7 @@ public class anagram {
             String word;
             var reader = new BufferedReader(new InputStreamReader(wordList));
             while ((word = reader.readLine()) != null){
-                words.add(word);
+                words.add(word.toLowerCase());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
