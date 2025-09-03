@@ -1,4 +1,4 @@
 package simpleHttpServer;
 
-public class httpResponder {
+public class httpResponse {
 }
