@@ -24,7 +24,7 @@ public class romanNumerals {
         var newAnswer = answer.getRomanNumberStringAnswer();
         while (numberToCalc >= digit) {
             answer.setNumberLeftToCalculate(numberToCalc -= digit);
-            answer.setRomanNumberStringAnswer(newAnswer += romanNumber);
+            answer.setRomanNumberStringAnswer(newAnswer + romanNumber);
         }
         return answer;
     }
