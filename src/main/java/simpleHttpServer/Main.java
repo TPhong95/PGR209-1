@@ -8,7 +8,7 @@ public class Main {
             HttpServer server = new HttpServer(8080);
             server.start();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("There's a problem ");;
         }
 
     }
