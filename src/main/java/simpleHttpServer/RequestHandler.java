@@ -1,42 +1,53 @@
 package simpleHttpServer;
 
+import simpleHttpServer.ResponseBuilders.AnagramResponseBuilder;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestHandler {
+public class RequestHandler implements Runnable {
 
-    private final Socket clientSocket;
+    private final BufferedReader in;
+    private final PrintWriter out;
+    private final String crlf = "\r\n";
 
-    public RequestHandler(Socket clientSocket) {
-        this.clientSocket = clientSocket;
+
+    public RequestHandler(Socket clientSocket) throws IOException {
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
     }
 
-    public HttpResponse handleRequest() throws IOException {
-        var request = getRequest(clientSocket);
-        String content = "";
-        String contentType = "";
-        String[] url = request.getUrl().split("\\?");
-        if (url.length == 2) {
-            switch (url[0].toLowerCase()) {
-                case "/anagram":
-                    contentType = "application/json";
-                    content = new AnagramResponseBuilder().createJsonStringAnagram(new Anagram().findAnagrams(url[1]));
-                    break;
+    @Override
+    public void run() {
+        HttpResponse response = null;
+        response = handleRequest();
+    }
 
-                case "/romannumerals":
-                    contentType = "application/json";
-                    content = new RomanNumeralsResponseBuilder().createJsonStringAnagram(new RomanNumerals().convertRomanNumerals(Integer.parseInt(url[1])));
-                    break;
-
-            }
-        } else {
-            contentType = "text/hmtl";
-            content = "<html><h1>Hello from Server</h1><br><b>Write either /anagram?(word) or /romannumerals?(number)</b><p1</html>";
+    private HttpResponse handleRequest() throws IOException {
+        var request = new HttpRequest(parseRequestLine(), parseHeaders(), null);
+        return switch (request.getPath()) {
+            case "/anagram" -> new AnagramResponseBuilder().build(request)
         }
+    }
 
-        return createResponse(content, contentType);
+    private Map<String, String> parseHeaders() throws IOException {
+        Map<String, String> headers = new HashMap<>();
+        var line = in.readLine();
+        while (!line.isEmpty()) {
+            var headerParts = line.split(":");
+            headers.put(headerParts[0], headerParts[1]);
+            line = in.readLine();
+        }
+        return headers;
+    }
+
+    private String parseRequestLine() throws IOException {
+        return in.readLine();
     }
 
     private HttpResponse createResponse(String content, String contentType) {

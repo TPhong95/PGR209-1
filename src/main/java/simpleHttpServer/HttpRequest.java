@@ -11,33 +11,33 @@ public class HttpRequest {
 
     private String method;
     private String url;
+    private String path;
+    private String urlParam;
     private String version;
     private Map<String, String> headers;
     private String body;
 
-    public HttpRequest(Socket clientSocket) throws IOException {
-        var in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        var requestLine = in.readLine();
-        var requestLineParts = requestLine.split(" ");
-        this.method = requestLineParts[0];
-        this.url = requestLineParts[1];
-        this.version = requestLineParts[2];
-        this.headers = parseHeaders(in);
-        this.body = null;
+    public HttpRequest(String requestLine, Map<String, String> headers, String body) {
+        var requestElements = requestLine.split(" ");
+        this.method = requestElements[0];
+        this.url = requestElements[1];
+        this.path = parsePath(requestElements[1]);
+        this.version = requestElements[2];
+        this.headers = headers;
+        this.body = body;
     }
 
-    private Map<String, String> parseHeaders(BufferedReader in) throws IOException {
-        Map<String, String> headers = new HashMap<>();
-        String currentHeaderLine = in.readLine();
-        while (currentHeaderLine.isEmpty()) {
-            String[] headerParts = currentHeaderLine.split(":");
-            headers.put(headerParts[0], headerParts[1]);
-            currentHeaderLine = in.readLine();
-        }
-        return headers;
+    private String parsePath(String url) {
+        if (!url.contains("?")) return url;
+        return url.split("\\?")[0];
     }
 
-    public String getUrl() {
-        return url;
+    public String getPath() {
+        return path;
     }
+    public String getUrlParam() {
+        return urlParam;
+    }
+
+
 }

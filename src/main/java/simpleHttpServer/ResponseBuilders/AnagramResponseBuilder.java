@@ -1,4 +1,7 @@
-package simpleHttpServer;
+package simpleHttpServer.ResponseBuilders;
+
+import simpleHttpServer.HttpRequest;
+import simpleHttpServer.HttpResponse;
 
 import java.util.List;
 
@@ -11,5 +14,8 @@ public class AnagramResponseBuilder {
         sb.deleteCharAt(sb.length() - 1);
         sb.append("]}");
         return sb.toString();
+    }
+
+    public HttpResponse build(HttpRequest request) {
     }
 }
