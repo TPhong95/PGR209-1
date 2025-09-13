@@ -1,21 +1,19 @@
 package simpleHttpServer.ResponseBuilders;
 
-import HttpTomcat.AnagramPackage.Anagram;
+import HttpTomcat.RomanNumeralsPackage.RomanNumerals;
 import simpleHttpServer.HttpRequest;
 import simpleHttpServer.HttpResponse;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class AnagramResponseBuilder implements ResponseBuilder{
+public class RomanNumeralsResponseBuilder implements ResponseBuilder {
 
     @Override
     public HttpResponse build(HttpRequest request) {
-        List<String> anagrams;
-        anagrams = new Anagram().findAnagrams(request.getUrlParam());
+        var romanNumber = new RomanNumerals().convertRomanNumerals(Integer.parseInt(request.getUrlParam()));
         var responseLine = createResponseLine();
-        var body = createJsonString(anagrams);
+        var body = createJsonString(romanNumber);
         var headers = createResponseHeader(body);
         return new HttpResponse(responseLine, headers, body);
     }
@@ -27,17 +25,15 @@ public class AnagramResponseBuilder implements ResponseBuilder{
         return headers;
     }
 
-
-    public String createJsonString(List<String> body) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{\"anagrams\":[");
-        body.forEach(b -> sb.append("\"").append(b).append("\"").append(","));
-        sb.deleteCharAt(sb.length() - 1);
-        sb.append("]}");
-        return sb.toString();
-    }
-
     private String createResponseLine() {
         return "HTTP/1.1 200 OK";
+    }
+
+    public String createJsonString(String romanNumber) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\"romanNumeral\":[");
+        sb.append(romanNumber);
+        sb.append("]}");
+        return sb.toString();
     }
 }

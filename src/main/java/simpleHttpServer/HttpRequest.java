@@ -1,10 +1,5 @@
 package simpleHttpServer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
@@ -22,9 +17,17 @@ public class HttpRequest {
         this.method = requestElements[0];
         this.url = requestElements[1];
         this.path = parsePath(requestElements[1]);
+        this.urlParam = parseUrlParam(requestElements[1]);
         this.version = requestElements[2];
         this.headers = headers;
         this.body = body;
+    }
+
+    private String parseUrlParam(String url) {
+        if (!url.contains("?")) return url;
+        var params = url.split("\\?")[1];
+        if (!params.contains("=")) return params;
+        return params.split("=")[1];
     }
 
     private String parsePath(String url) {
@@ -35,6 +38,7 @@ public class HttpRequest {
     public String getPath() {
         return path;
     }
+
     public String getUrlParam() {
         return urlParam;
     }

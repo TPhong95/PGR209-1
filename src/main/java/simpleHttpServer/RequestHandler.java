@@ -1,6 +1,8 @@
 package simpleHttpServer;
 
 import simpleHttpServer.ResponseBuilders.AnagramResponseBuilder;
+import simpleHttpServer.ResponseBuilders.DefaultResponseBuilder;
+import simpleHttpServer.ResponseBuilders.RomanNumeralsResponseBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,14 +27,30 @@ public class RequestHandler implements Runnable {
     @Override
     public void run() {
         HttpResponse response = null;
-        response = handleRequest();
+        try {
+            response = handleRequest();
+            sendResponse(response);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void sendResponse(HttpResponse response) {
+        out.print(response.getResponseLine()+ crlf);
+        response.getHeaders().forEach((key, value) -> out.print(key + ": " + value + crlf));
+        out.print(crlf);
+        out.print(response.getBody());
+        out.flush();
+        out.close();
     }
 
     private HttpResponse handleRequest() throws IOException {
         var request = new HttpRequest(parseRequestLine(), parseHeaders(), null);
         return switch (request.getPath()) {
-            case "/anagram" -> new AnagramResponseBuilder().build(request)
-        }
+            case "/anagram" -> new AnagramResponseBuilder().build(request);
+            case "/romannumber" -> new RomanNumeralsResponseBuilder().build(request);
+            default -> new DefaultResponseBuilder().build(request);
+        };
     }
 
     private Map<String, String> parseHeaders() throws IOException {
@@ -50,14 +68,4 @@ public class RequestHandler implements Runnable {
         return in.readLine();
     }
 
-    private HttpResponse createResponse(String content, String contentType) {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type: ", contentType);
-        headers.put("Content-Length ", String.valueOf(content.length()));
-        return new HttpResponse(headers, content);
-    }
-
-    private HttpRequest getRequest(Socket clientSocket) throws IOException {
-        return new HttpRequest(clientSocket);
-    }
 }

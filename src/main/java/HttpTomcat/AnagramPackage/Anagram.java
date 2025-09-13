@@ -35,7 +35,7 @@ public class Anagram {
                 words.add(word.toLowerCase());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getLocalizedMessage());
         }
         return new HashSet<>(words);
     }
