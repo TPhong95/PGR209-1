@@ -1,6 +1,7 @@
 package HttpTomcat;
 
 import HttpTomcat.AnagramPackage.AnagramServlet;
+import HttpTomcat.RomanNumeralsPackage.RomanNumeralsServlet;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
@@ -16,6 +17,13 @@ public class HttpServer {
 
         Tomcat.addServlet(context, "anagramServlet", new AnagramServlet());
         context.addServletMappingDecoded("/anagram", "anagramServlet");
+
+        Tomcat.addServlet(context, "romanNumeralsServlet", new RomanNumeralsServlet());
+        context.addServletMappingDecoded("/romannumber", "romanNumeralsServlet");
+
+        Tomcat.addServlet(context, "defaultServletUrl", new DefaultServletUrl());
+        context.addServletMappingDecoded("/", "defaultServletUrl");
+
 
         try {
             tomcat.start();
