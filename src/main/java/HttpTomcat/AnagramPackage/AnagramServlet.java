@@ -19,8 +19,5 @@ public class AnagramServlet extends HttpServlet {
         out.println("<ul>");
         result.forEach(w -> out.println("<li>" + w + "</li>"));
         out.println("</ul>");
-
-
-
     }
 }
